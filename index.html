@@ -1,945 +1,1165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>𝓑𝓞𝓣𝓐𝓣𝓞 | 3D Cosmic Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>𝐁𝐎𝐓𝐀𝐓𝐎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Inter', 'Space Grotesk', system-ui, sans-serif;
-            background: #03030f;
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
+    body {
+      font-family: 'Inter', 'Space Grotesk', sans-serif;
+      background: #0a0a12;
+      color: #eceaff;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      line-height: 1.5;
+      cursor: pointer; 
+    }
 
-        /* Fixed Background */
-        .fixed-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background-image: url('https://4kwallpapers.com/images/walls/thumbs_3t/23027.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.4) saturate(1.1) contrast(1.05);
-        }
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 30% 40%, #191532, #05030f);
+      z-index: -2;
+    }
+    
+    .gradient-bg::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('Main background.jpg') no-repeat center center/cover;
+      opacity: 0.22;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+    
+    .gradient-bg::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 70% 20%, rgba(140, 80, 220, 0.25), transparent 70%);
+      pointer-events: none;
+    }
 
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(3,3,15,0.75) 100%);
-            z-index: -1;
-            pointer-events: none;
-        }
+    .noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 10px);
+      pointer-events: none;
+      z-index: -1;
+    }
 
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0rem 1.8rem 2rem 1.8rem;
+      position: relative;
+      z-index: 2;
+    }
 
-        .content {
-            position: relative;
-            z-index: 10;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px 24px 80px;
-        }
+    .hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 85vh;
+      padding: 1rem 0 0.5rem 0;
+      margin-bottom: -0.5rem;
+    }
 
-        /* ========== DESKTOP LAYOUT (default for large screens) ========== */
-        @media (min-width: 992px) {
-            .content {
-                padding: 30px 40px 80px;
-            }
+    .hero-card {
+      background: rgba(18, 15, 32, 0.5);
+      backdrop-filter: blur(20px);
+      border-radius: 3rem;
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border: 1px solid rgba(170, 120, 255, 0.5);
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(200, 170, 255, 0.2), 0 0 28px rgba(140, 80, 255, 0.3);
+      transition: all 0.4s ease;
+      max-width: 580px;
+      width: 100%;
+      animation: gentleRise 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    
+    @keyframes gentleRise {
+      0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-            /* Desktop Header */
-            .profile-pic {
-                width: 180px;
-                height: 180px;
-                border: 4px solid rgba(80, 200, 255, 0.8);
-                box-shadow: 0 0 35px rgba(0, 160, 255, 0.6);
-            }
-            .name {
-                font-size: 4rem;
-                letter-spacing: -0.02em;
-            }
-            .tagline {
-                font-size: 1.2rem;
-                padding: 12px 28px;
-            }
+    .avatar-ring {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1.2rem;
+      position: relative;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b77eff, #7c3aed);
+      padding: 4px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 18px rgba(156, 96, 255, 0.7), 0 12px 28px -5px black;
+      animation: softGlowPulse 3s infinite alternate;
+    }
+    
+    @keyframes softGlowPulse {
+      0% { box-shadow: 0 0 8px rgba(156, 96, 255, 0.5), 0 12px 28px -5px black; }
+      100% { box-shadow: 0 0 32px rgba(200, 140, 255, 1), 0 14px 32px -4px black; }
+    }
+    
+    .avatar-ring:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 38px rgba(190, 130, 255, 1);
+    }
 
-            /* Desktop Section Titles */
-            .section-title-3d {
-                font-size: 2.8rem;
-            }
-            .section-title-3d i {
-                font-size: 2.5rem;
-            }
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #1c162e;
+      position: relative;
+      z-index: 2;
+    }
 
-            /* Desktop Social Grid - Cards Grid */
-            .social-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: 30px;
-                margin: 40px 0;
-            }
-            .social-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 30px 20px;
-                background: rgba(15, 25, 55, 0.55);
-                backdrop-filter: blur(12px);
-                border-radius: 28px;
-                transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            }
-            .social-card:hover {
-                transform: translateY(-15px) scale(1.02);
-                background: rgba(25, 45, 85, 0.7);
-                border-color: #3a86ff;
-                box-shadow: 0 30px 50px -15px #000000aa, 0 0 25px rgba(58,134,255,0.3);
-            }
-            .social-icon-container {
-                width: 85px;
-                height: 85px;
-                margin: 0 auto 20px;
-                font-size: 40px;
-            }
-            .social-content h3 {
-                font-size: 1.7rem;
-            }
-            .social-link {
-                padding: 10px 24px;
-                font-size: 0.95rem;
-            }
+    .avatar-bg-gif {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      opacity: 0.95;
+      z-index: 1;
+      filter: brightness(1.05) saturate(1.2);
+      transition: opacity 0.2s;
+    }
 
-            /* Desktop Anime Lists - 2 columns */
-            .anime-lists {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 35px;
-                margin: 40px 0;
-            }
-            .anime-list {
-                padding: 30px;
-            }
-            .list-title {
-                font-size: 1.8rem;
-            }
+    .hero-card h1 {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(125deg, #f5efff, #dbbaff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.3rem;
+    }
 
-            /* Desktop Top Anime - 3 columns */
-            .top-cards {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 35px;
-                margin: 45px 0;
-            }
-            .top-card img {
-                height: 260px;
-            }
-            .rank-badge {
-                width: 55px;
-                height: 55px;
-                font-size: 1.8rem;
-            }
+    .hero-tagline {
+      font-size: 1rem;
+      opacity: 0.85;
+      letter-spacing: 1px;
+      font-weight: 400;
+      background: rgba(200, 170, 255, 0.15);
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+    }
 
-            /* Desktop Contact */
-            .contact-container {
-                padding: 45px;
-                margin: 60px 0;
-            }
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      margin-top: 1rem;
+    }
+    
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 500;
+      background: rgba(140, 100, 220, 0.25);
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      color: #d4bdff;
+      margin-bottom: 0.6rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #ffffff, #d5baff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
 
-            /* Desktop Music Player */
-            .music-player-panel {
-                width: 340px;
-                right: 35px;
-                left: auto;
-                bottom: 120px;
-            }
-            .music-toggle-3d {
-                width: 70px;
-                height: 70px;
-                font-size: 32px;
-                bottom: 35px;
-                right: 35px;
-            }
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
 
-            /* Desktop Notification */
-            .notification-3d {
-                white-space: nowrap;
-                padding: 14px 32px;
-                font-size: 1.1rem;
-                left: 50%;
-                right: auto;
-                transform: translateX(-50%) translateY(-100px) rotateX(-30deg);
-            }
-            .notification-3d.show {
-                transform: translateX(-50%) translateY(0) rotateX(0deg);
-            }
-        }
+    .social-link {
+      background: rgba(22, 20, 42, 0.65);
+      backdrop-filter: blur(12px);
+      border-radius: 1.4rem;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: #e5defa;
+      border: 1.5px solid rgba(130, 90, 210, 0.4);
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+      position: relative;
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+      transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.1), transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.1), border 0.2s, box-shadow 0.2s;
+    }
+    
+    .social-link.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 
-        /* ========== MOBILE LAYOUT (under 992px) ========== */
-        @media (max-width: 991px) {
-            .content {
-                padding: 16px 16px 70px;
-            }
+    .social-link:hover {
+      transform: translateY(-5px) scale(1.01);
+      background: rgba(42, 32, 75, 0.9);
+      border-color: #e0b2ff;
+      box-shadow: 0 0 16px rgba(180, 120, 255, 0.7), 0 10px 20px -8px black;
+    }
 
-            .profile-pic {
-                width: 120px;
-                height: 120px;
-            }
-            .name {
-                font-size: 2.2rem;
-            }
-            .tagline {
-                font-size: 0.9rem;
-                padding: 8px 18px;
-            }
+    .social-icon {
+      font-size: 1.8rem;
+      min-width: 46px;
+      text-align: center;
+      color: #d6b3ff;
+    }
 
-            .section-title-3d {
-                font-size: 1.7rem;
-            }
-            .section-title-3d i {
-                font-size: 1.5rem;
-            }
+    .social-details {
+      flex: 1;
+    }
 
-            /* Mobile Social - Vertical Cards */
-            .social-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-                margin: 25px 0;
-            }
-            .social-card {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                text-align: left;
-                padding: 16px;
-                background: rgba(15, 25, 55, 0.65);
-                backdrop-filter: blur(12px);
-                border-radius: 22px;
-            }
-            .social-icon-container {
-                width: 55px;
-                height: 55px;
-                min-width: 55px;
-                font-size: 26px;
-                margin: 0;
-            }
-            .social-content h3 {
-                font-size: 1.2rem;
-            }
-            .social-content p {
-                font-size: 0.75rem;
-            }
-            .social-link {
-                padding: 5px 14px;
-                font-size: 0.75rem;
-            }
+    .social-details h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
 
-            /* Mobile Anime - Vertical */
-            .anime-lists {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                margin: 25px 0;
-            }
-            .anime-list {
-                padding: 20px;
-            }
-            .list-title {
-                font-size: 1.3rem;
-            }
+    .social-note {
+      font-size: 0.7rem;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
 
-            /* Mobile Top Anime - Vertical */
-            .top-cards {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                margin: 25px 0;
-            }
-            .top-card img {
-                height: 180px;
-            }
-            .rank-badge {
-                width: 42px;
-                height: 42px;
-                font-size: 1.3rem;
-            }
+    .golden-badge {
+      background: linear-gradient(125deg, #fcef9e, #e6c45a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 500;
+    }
 
-            /* Mobile Contact */
-            .contact-container {
-                padding: 24px 18px;
-                margin: 35px 0;
-            }
+    .fav-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    
+    .fav-card {
+      background: rgba(18, 15, 36, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 1.8rem;
+      padding: 0.9rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1.5px solid rgba(150, 100, 240, 0.5);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px) rotateX(2deg);
+      transition: opacity 0.55s cubic-bezier(0.2, 0.85, 0.4, 1), transform 0.55s cubic-bezier(0.2, 0.85, 0.4, 1), box-shadow 0.2s, border 0.2s;
+    }
+    
+    .fav-card.revealed {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg);
+    }
+    
+    .fav-card:hover {
+      background: rgba(35, 28, 65, 0.9);
+      transform: translateX(8px) scale(1.01);
+      border-color: #e3bdff;
+      box-shadow: 0 0 20px rgba(170, 110, 255, 0.65), 0 14px 24px -12px rgba(0,0,0,0.5);
+    }
+    
+    .anime-thumb {
+      width: 75px;
+      height: 75px;
+      border-radius: 1.2rem;
+      object-fit: cover;
+      box-shadow: 0 8px 16px -5px rgba(0,0,0,0.5);
+      border: 1px solid rgba(200, 160, 255, 0.6);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    
+    .fav-card:hover .anime-thumb {
+      transform: scale(1.05);
+      box-shadow: 0 12px 22px -6px black;
+      border-color: #ffd6ff;
+    }
+    
+    .fav-rank {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      min-width: 60px;
+      text-align: center;
+      background: linear-gradient(145deg, #e7d5ff, #bc91ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .fav-info {
+      flex: 2;
+      min-width: 160px;
+    }
+    
+    .fav-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    
+    .fav-stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 5px;
+      font-size: 0.7rem;
+      opacity: 0.8;
+      flex-wrap: wrap;
+    }
+    
+    .fav-stats span i {
+      margin-right: 4px;
+      font-size: 0.65rem;
+      color: #c8a2ff;
+    }
+    
+    .rating-pill {
+      background: rgba(110, 70, 190, 0.4);
+      border-radius: 40px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(4px);
+      margin-top: 6px;
+      border: 0.5px solid rgba(200, 160, 255, 0.4);
+    }
+    
+    .rating-pill i {
+      font-size: 0.65rem;
+      color: #ffdf80;
+    }
+    
+    .quote-vibe {
+      margin-left: auto;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      background: rgba(80, 50, 150, 0.3);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      font-style: italic;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(140, 100, 220, 0.35);
+      font-size: 0.7rem;
+      opacity: 0.65;
+    }
+    
+    .music-fixed-wrapper {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: none;
+    }
+    
+    .music-toggle-btn {
+      width: 52px;
+      height: 52px;
+      background: rgba(25, 20, 48, 0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 60px;
+      border: 1.5px solid rgba(170, 120, 255, 0.7);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(156, 96, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      color: #e2d6ff;
+      font-size: 1.5rem;
+      z-index: 1002;
+      pointer-events: auto;
+    }
+    
+    .music-toggle-btn:hover {
+      transform: scale(1.08);
+      background: rgba(42, 32, 85, 0.95);
+      border-color: #e9c2ff;
+      box-shadow: 0 0 22px rgba(200, 130, 255, 0.8);
+      color: white;
+    }
+    
+    .music-float {
+      background: rgba(18, 14, 36, 0.92);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(170, 120, 255, 0.55);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(210, 170, 255, 0.2), 0 0 28px rgba(120, 70, 220, 0.3);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      font-family: 'Inter', 'Space Grotesk', sans-serif;
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      visibility: visible;
+    }
+    
+    .music-float.hidden {
+      opacity: 0;
+      transform: translateX(-40px);
+      pointer-events: none;
+      visibility: hidden;
+    }
+    
+    .music-player-inner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .player-avatar {
+      background: linear-gradient(135deg, #a06eff, #673ab7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(160, 110, 255, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .player-avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(190, 130, 255, 0.9);
+    }
+    
+    .player-avatar i {
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    
+    .track-name {
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      background: linear-gradient(120deg, #f0eaff, #dbb6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .track-artist {
+      font-size: 0.7rem;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .controls-group {
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 80px;
+      backdrop-filter: blur(4px);
+    }
+    
+    .ctrl-btn {
+      background: transparent;
+      border: none;
+      color: #e5d9ff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      border-radius: 40px;
+    }
+    
+    .ctrl-btn:hover {
+      color: #fff;
+      background: rgba(180, 130, 255, 0.35);
+      transform: scale(1.08);
+      text-shadow: 0 0 6px #ceaaff;
+    }
+    
+    .progress-bar-bg {
+      background: rgba(210, 180, 255, 0.3);
+      border-radius: 20px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+    
+    .progress-bar-bg:hover {
+      background: rgba(210, 180, 255, 0.5);
+    }
+    
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #cb9eff, #f0ceff);
+      border-radius: 20px;
+      box-shadow: 0 0 6px #dbb2ff;
+    }
+    
+    .time-current, .time-duration {
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      opacity: 0.85;
+    }
+    
+    .volume-slider-compact {
+      -webkit-appearance: none;
+      background: rgba(210, 180, 255, 0.5);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    
+    .volume-slider-compact::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border-radius: 50%;
+      background: #e9ccff;
+      box-shadow: 0 0 6px #c48eff;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    
+    .volume-slider-compact::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      background: white;
+    }
+    
+    @media (min-width: 781px) {
+      .music-float {
+        border-radius: 80px;
+        max-width: 640px;
+      }
+      .music-player-inner {
+        padding: 10px 24px 10px 20px;
+        flex-wrap: wrap;
+      }
+      .player-avatar {
+        width: 52px;
+        height: 52px;
+      }
+      .player-avatar i {
+        font-size: 1.8rem;
+      }
+      .player-info {
+        min-width: 130px;
+      }
+      .track-name {
+        font-size: 1rem;
+        white-space: nowrap;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .track-artist {
+        font-size: 0.72rem;
+      }
+      .controls-group {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 6px 18px 6px 16px;
+      }
+      .player-controls {
+        display: flex;
+        gap: 8px;
+      }
+      .ctrl-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 1.1rem;
+      }
+      .progress-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .time-current, .time-duration {
+        font-size: 0.75rem;
+        min-width: 42px;
+      }
+      .progress-bar-bg {
+        width: 130px;
+        height: 5px;
+      }
+      .volume-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.25);
+        padding: 4px 14px 4px 12px;
+        border-radius: 50px;
+      }
+      .volume-inline i {
+        font-size: 0.9rem;
+        color: #dbbaff;
+      }
+      .volume-slider-compact {
+        width: 85px;
+        height: 4px;
+      }
+    }
+    
+    @media (max-width: 780px) {
+      .music-fixed-wrapper {
+        bottom: 20px;
+        left: 20px;
+        gap: 10px;
+      }
+      .music-toggle-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 1.3rem;
+      }
+      .music-float {
+        border-radius: 60px;
+        max-width: 360px;
+        min-width: 300px;
+      }
+      .music-player-inner {
+        padding: 6px 12px;
+        gap: 8px;
+        flex-wrap: nowrap;
+        width: 100%;
+      }
+      .player-avatar {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+      }
+      .player-avatar i {
+        font-size: 1.3rem;
+      }
+      .player-info {
+        min-width: 70px;
+        flex-shrink: 1;
+        overflow: hidden;
+      }
+      .track-name {
+        font-size: 0.75rem;
+        max-width: 75px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .track-artist {
+        font-size: 0.55rem;
+        white-space: nowrap;
+      }
+      .controls-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 10px;
+        flex-shrink: 1;
+        min-width: 0;
+      }
+      .player-controls {
+        display: flex;
+        gap: 3px;
+        flex-shrink: 0;
+      }
+      .ctrl-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+      .progress-area {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 1;
+        min-width: 90px;
+      }
+      .time-current, .time-duration {
+        font-size: 0.6rem;
+        min-width: 30px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .progress-bar-bg {
+        width: 70px;
+        height: 3px;
+        flex-shrink: 1;
+      }
+      .volume-inline {
+        display: none;
+      }
+      .container {
+        padding: 0rem 1rem 1.5rem 1rem;
+      }
+      .hero {
+        min-height: 70vh;
+      }
+      .quote-vibe {
+        white-space: normal;
+        font-size: 0.7rem;
+        margin-top: 8px;
+        width: 100%;
+        text-align: center;
+      }
+      .fav-card {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .anime-thumb {
+        width: 65px;
+        height: 65px;
+      }
+      .fav-rank {
+        min-width: 45px;
+        font-size: 1.7rem;
+      }
+      .hero-card h1 {
+        font-size: 2rem;
+      }
+      .avatar-ring {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .music-float {
+        max-width: 320px;
+        min-width: 280px;
+      }
+      .controls-group {
+        gap: 4px;
+        padding: 3px 8px;
+      }
+      .progress-area {
+        gap: 3px;
+        min-width: 80px;
+      }
+      .progress-bar-bg {
+        width: 55px;
+      }
+      .time-current, .time-duration {
+        min-width: 26px;
+        font-size: 0.55rem;
+      }
+      .player-info {
+        min-width: 60px;
+      }
+      .track-name {
+        max-width: 65px;
+        font-size: 0.7rem;
+      }
+      .fav-card {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+      .anime-thumb {
+        width: 90px;
+        height: 90px;
+      }
+      .quote-vibe {
+        margin-left: 0;
+      }
+    }
+    
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f0d1c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #b27af0;
+      border-radius: 20px;
+    }
+    
+    .hero-card:hover {
+      border-color: #dbb2ff;
+      box-shadow: 0 0 28px rgba(160, 100, 255, 0.6), 0 30px 50px -20px black;
+    }
 
-            /* Mobile Music */
-            .music-player-panel {
-                width: calc(100% - 40px);
-                max-width: 320px;
-                right: 20px;
-                left: auto;
-                bottom: 85px;
-            }
-            .music-toggle-3d {
-                width: 52px;
-                height: 52px;
-                font-size: 24px;
-                bottom: 20px;
-                right: 20px;
-            }
-
-            /* Mobile Notification */
-            .notification-3d {
-                left: 20px;
-                right: 20px;
-                transform: translateY(-100px) rotateX(-20deg);
-                font-size: 0.85rem;
-                padding: 10px 16px;
-                white-space: normal;
-                text-align: center;
-            }
-            .notification-3d.show {
-                transform: translateY(0) rotateX(0deg);
-            }
-        }
-
-        /* Common Styles for both layouts */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .profile-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: floatProfile 5s ease-in-out infinite;
-        }
-
-        @keyframes floatProfile {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .profile-pic {
-            border-radius: 50%;
-            object-fit: cover;
-            transition: all 0.3s;
-        }
-        .profile-pic:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 55px rgba(0, 200, 255, 0.9);
-        }
-
-        .name {
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFFFFF, #7AB2FF, #3A86FF);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-top: 15px;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .tagline {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            display: inline-block;
-            border-radius: 60px;
-            border: 1px solid rgba(100, 180, 255, 0.6);
-            font-weight: 500;
-        }
-
-        /* Section Titles */
-        .section-title-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 50px 0 30px 0;
-        }
-
-        .section-title-3d {
-            font-weight: 700;
-            text-align: center;
-            background: linear-gradient(135deg, #FFFFFF 0%, #B8D4FF 40%, #3A86FF 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-            position: relative;
-            font-family: 'Space Grotesk', sans-serif;
-            letter-spacing: -0.02em;
-            padding: 0 15px;
-        }
-
-        .section-title-3d::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #3A86FF, #7AB2FF, #3A86FF, transparent);
-            border-radius: 3px;
-            animation: glowUnderline 3s ease-in-out infinite;
-        }
-
-        @keyframes glowUnderline {
-            0% { width: 55px; opacity: 0.6; box-shadow: 0 0 5px #3A86FF; }
-            50% { width: 110px; opacity: 1; box-shadow: 0 0 15px #3A86FF; }
-            100% { width: 55px; opacity: 0.6; box-shadow: 0 0 5px #3A86FF; }
-        }
-
-        .section-title-3d i {
-            background: linear-gradient(135deg, #FFD966, #FFA500);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        /* Scroll Animations */
-        .scroll-section {
-            transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            will-change: transform, opacity;
-        }
-        .scroll-section.in-view {
-            opacity: 1;
-            transform: translateY(0) rotateX(0deg) scale(1);
-        }
-        .scroll-section.out-view {
-            opacity: 0;
-            transform: translateY(50px) rotateX(12deg) scale(0.94);
-        }
-
-        /* Social Card Common */
-        .social-card {
-            transition: all 0.3s ease;
-            border: 1px solid rgba(70, 150, 255, 0.35);
-            box-shadow: 0 15px 30px -12px black;
-        }
-        .social-card:hover {
-            border-color: #3a86ff;
-        }
-
-        .social-icon-container {
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 20px -5px black;
-        }
-        .social-content {
-            flex: 1;
-        }
-        .social-content p {
-            color: #bbd4ff;
-        }
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(58, 134, 255, 0.2);
-            backdrop-filter: blur(4px);
-            border-radius: 40px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.3s;
-            border: 1px solid rgba(58, 134, 255, 0.4);
-        }
-        .social-link:hover {
-            background: #3a86ff;
-            transform: translateX(5px);
-            gap: 12px;
-        }
-        .social-note {
-            background: #ffd96620;
-            padding: 3px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 8px;
-            color: #ffdf9c;
-            font-size: 0.7rem;
-        }
-
-        /* Icon Backgrounds */
-        .instagram-bg { background: linear-gradient(135deg, #feda77, #d62976, #962fbf, #4f5bd5); }
-        .discord-bg { background: linear-gradient(135deg, #5865F2, #404EED); }
-        .threads-bg { background: linear-gradient(135deg, #000000, #2c2c2c); }
-        .tiktok-bg { background: #000000 linear-gradient(45deg, #00f2ea, #ff0050); }
-        .facebook-bg { background: linear-gradient(135deg, #1877F2, #0b5bd1); }
-        .pinterest-bg { background: linear-gradient(135deg, #E60023, #bd081c); }
-        .twitter-bg { background: linear-gradient(135deg, #1DA1F2, #0d8bd9); }
-        .github-bg { background: linear-gradient(135deg, #24292e, #0d1117); }
-        .reddit-bg { background: linear-gradient(135deg, #FF4500, #ff6a33); }
-        .chess-bg { background: linear-gradient(135deg, #779954, #4e6e2c); }
-
-        /* Anime & Top Cards Common */
-        .anime-list {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 28px;
-            border: 1px solid rgba(80, 150, 255, 0.3);
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        .anime-list:hover {
-            transform: translateY(-8px);
-            border-color: #3a86ff;
-        }
-        .list-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #aad0ff;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        .anime-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .top-card {
-            background: rgba(10, 20, 45, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            overflow: hidden;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            position: relative;
-            box-shadow: 0 20px 35px -12px black;
-        }
-        .top-card:hover {
-            transform: translateY(-12px) rotateX(4deg);
-            box-shadow: 0 35px 50px -15px #000000cc;
-        }
-        .top-card img {
-            width: 100%;
-            object-fit: cover;
-            transition: 0.4s;
-        }
-        .top-card:hover img {
-            transform: scale(1.03);
-        }
-        .rank-badge {
-            background: radial-gradient(circle, #ffd966, #ffae00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: #0a0f2a;
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 2;
-            box-shadow: 0 5px 15px black;
-        }
-        .top-info {
-            padding: 20px;
-        }
-        .top-info h3 {
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        /* Contact Form */
-        .contact-container {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(16px);
-            border-radius: 40px;
-            border: 1px solid rgba(70, 160, 255, 0.5);
-            box-shadow: 0 30px 50px -20px black;
-        }
-        .form-input, .form-textarea {
-            background: rgba(20, 30, 60, 0.8);
-            border: 1px solid #3a6ea5;
-            border-radius: 24px;
-            padding: 14px 20px;
-            color: white;
-            width: 100%;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: 0.2s;
-        }
-        .form-input:focus, .form-textarea:focus {
-            border-color: #3a86ff;
-            box-shadow: 0 0 15px rgba(58,134,255,0.3);
-            outline: none;
-        }
-        .form-submit {
-            background: linear-gradient(95deg, #2a6eff, #904eff);
-            border: none;
-            padding: 14px 24px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .form-submit:hover {
-            transform: scale(1.02) translateY(-3px);
-            box-shadow: 0 15px 30px rgba(42,110,255,0.4);
-        }
-
-        /* Music Player */
-        .music-toggle-3d {
-            position: fixed;
-            background: radial-gradient(circle at 30% 20%, #2a6eff, #0a2a6a);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 200;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            animation: floatBtn 3s infinite alternate;
-            transition: transform 0.2s;
-        }
-        .music-toggle-3d:hover {
-            transform: scale(1.08);
-        }
-        @keyframes floatBtn {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
-        }
-        .music-player-panel {
-            position: fixed;
-            background: rgba(8, 18, 38, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 20px;
-            border: 1px solid rgba(90, 170, 255, 0.6);
-            transform: scale(0) translateY(40px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            transform-origin: bottom right;
-            z-index: 199;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-        .music-player-panel.active {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-        .album-art-small {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
-            object-fit: cover;
-            margin-right: 14px;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
-        }
-        .track-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .progress-bar {
-            background: #2a3a6a;
-            height: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3a86ff, #7ab2ff);
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        input[type="range"] {
-            -webkit-appearance: none;
-            background: #2a3a6a;
-            height: 4px;
-            border-radius: 4px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #3a86ff;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 8px #3a86ff;
-        }
-
-        /* Notification */
-        .notification-3d {
-            position: fixed;
-            background: rgba(10, 20, 45, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1000;
-            border: 1px solid rgba(90, 170, 255, 0.7);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 500;
-            transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.4s;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .notification-3d.show {
-            opacity: 1;
-        }
-        .notification-3d i:first-child {
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%,100%{ transform: translateY(0); }
-            50%{ transform: translateY(-4px); }
-        }
-
-        footer {
-            text-align: center;
-            padding: 35px 0 20px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            margin-top: 50px;
-            font-size: 0.85rem;
-            opacity: 0.7;
-        }
-    </style>
+    .welcome-toast {
+      position: fixed;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(25, 18, 48, 0.95);
+      backdrop-filter: blur(28px);
+      border: 1px solid rgba(200, 150, 255, 0.8);
+      border-radius: 60px;
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      box-shadow: 0 20px 35px -12px black, 0 0 0 1px rgba(210, 180, 255, 0.3);
+      font-family: 'Space Grotesk', monospace;
+      transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.2), opacity 0.4s ease;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .welcome-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .welcome-toast i {
+      font-size: 1.8rem;
+      color: #e3bcff;
+      filter: drop-shadow(0 0 6px #b77eff);
+    }
+    .welcome-toast span {
+      font-size: 1rem;
+      font-weight: 500;
+      background: linear-gradient(125deg, #f0e9ff, #d7b6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    @media (max-width: 640px) {
+      .welcome-toast { padding: 0.6rem 1.2rem; white-space: nowrap; }
+      .welcome-toast i { font-size: 1.3rem; }
+      .welcome-toast span { font-size: 0.8rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="fixed-bg"></div>
-    <div class="overlay"></div>
-    <div id="canvas-container"></div>
+<div class="gradient-bg"></div>
+<div class="noise"></div>
 
-    <div class="notification-3d" id="welcomeNotification">
-        <i class="fas fa-leaf"></i>
-        <span>🍀 Click anywhere to listen to music •ᴗ•</span>
-        <i class="fas fa-music"></i>
+<div class="container">
+  <div class="hero">
+    <div class="hero-card">
+      <div class="avatar-ring">
+        <img class="avatar-bg-gif" src="profile background.gif" alt="animated aura" loading="eager">
+        <img class="avatar-img" src="profile.jpg" alt="Botato" loading="eager">
+      </div>
+      <h1>ʙᴏᴛᴀᴛᴏ</h1>
+      <div class="hero-tagline">✦ 𝓦𝓮𝓵𝓬𝓸𝓶𝓮 ✦</div>
     </div>
+  </div>
 
-    <div class="content">
-        <header>
-            <div class="profile-container">
-                <img src="pfp.jpg" alt="Botato Profile" class="profile-pic" onerror="this.src='https://cdn-b.heylink.me/media/users/avatars/a3edaf247c2a44daa6f00d62b703749b.webp'">
-                <h1 class="name">𝓑𝓞𝓣𝓐𝓣𝓞</h1>
-                <div class="tagline">♜ Chess Player • ✦ Editor • ⌨️ Developer</div>
-            </div>
-        </header>
+  <div class="section-header" style="margin-top: 0.5rem;">
+    <span class="section-label"><i class="fas fa-compass"></i>  𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐑𝐨𝐨𝐭𝐬</span>
+    <h2>𝓜𝔂 𝓐𝓬𝓬𝓸𝓾𝓷𝓽𝓼</h2>
+  </div>
+  <div class="social-grid" id="socialGrid"></div>
 
-        <!-- CONNECT SECTION -->
-        <section class="scroll-section social-section">-
-            <div class="section-title-wrapper"><h2 class="section-title-3d"><i class="fas fa-globe"></i> Connect With Me</h2></div>
-            <div class="social-grid">
-                <div class="social-card"><div class="social-icon-container instagram-bg"><i class="fab fa-instagram"></i></div><div class="social-content"><h3>Instagram</h3><p>Always active here.</p><a href="https://www.instagram.com/_botato_/" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container discord-bg"><i class="fab fa-discord"></i></div><div class="social-content"><h3>Discord</h3><p>Chilling.</p><a href="https://www.discord.com/users/761599757310623765" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container threads-bg"><i class="fas fa-comment"></i></div><div class="social-content"><h3>Threads</h3><p>Useless.</p><a href="https://www.threads.com/@_botato_" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container tiktok-bg"><i class="fab fa-tiktok"></i></div><div class="social-content"><h3>TikTok</h3><p>Brainroot.</p><a href="https://www.tiktok.com/@pzlru" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container facebook-bg"><i class="fab fa-facebook"></i></div><div class="social-content"><h3>Facebook</h3><p>Made for people like my granny.</p><a href="https://web.facebook.com/botatosoooo/" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container pinterest-bg"><i class="fab fa-pinterest"></i></div><div class="social-content"><h3>Pinterest</h3><p>Find my collections.</p><a href="https://www.pinterest.com/botato3" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container twitter-bg"><i class="fab fa-twitter"></i></div><div class="social-content"><h3>Twitter (X)</h3><p>Thoughts and random stuff.</p><a href="https://x.com/_botatos_" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container github-bg"><i class="fab fa-github"></i></div><div class="social-content"><h3>GitHub</h3><p>Check out my coding projects.</p><span class="social-note">Just a Hobbie</span><a href="https://github.com/botato3" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container reddit-bg"><i class="fab fa-reddit"></i></div><div class="social-content"><h3>Reddit</h3><p>Memes and random finds.</p><span class="social-note">Life saver lol</span><a href="https://www.reddit.com/user/Connect-Swing-5067/" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="social-card"><div class="social-icon-container chess-bg"><i class="fas fa-chess-knight"></i></div><div class="social-content"><h3>Chess.com</h3><p>Challenge me to a chess match.</p><span class="social-note">We can play!</span><a href="https://www.chess.com/member/yassine1983" target="_blank" class="social-link"> Visit Profile <i class="fas fa-arrow-right"></i></a></div></div>
-            </div>
-        </section>
+  <div class="section-header">
+    <span class="section-label"><i class="fas fa-scroll"></i>  𝐒𝐨𝐮𝐥 𝐂𝐢𝐧𝐞𝐦𝐚</span>
+    <h2>𝚃𝚘𝚙 𝐕</h2>
+  </div>
+  <div class="fav-grid" id="favoritesList"></div>
+  
+  <footer>
+    <i class="fas fa-feather-alt"></i> 𝐂𝐑𝐄𝐀𝐓𝐄𝐃 𝐁𝐘 𝐁𝐎𝐓𝐀𝐓𝐎 ❦
+  </footer>
+</div>
 
-        <!-- MY ANIME JOURNEY -->
-        <section class="scroll-section anime-section">
-            <div class="section-title-wrapper"><h2 class="section-title-3d"><i class="fas fa-film"></i> My Anime Journey</h2></div>
-            <div class="anime-lists">
-                <div class="anime-list"><h3 class="list-title"><i class="fas fa-check-circle"></i> Watched Anime</h3><div class="anime-item"><span>Attack on Titan</span><span>All</span></div><div class="anime-item"><span>Demon Slayer</span><span>All</span></div><div class="anime-item"><span>Death Note</span><span>All</span></div><div class="anime-item"><span>Jujutsu Kaisen</span><span>All</span></div><div class="anime-item"><span>Baki</span><span>All</span></div><div class="anime-item"><span>Shangri-la frontier</span><span>S1/S2</span></div><div class="anime-item"><span>Ao Ashi</span><span>S1</span></div><div class="anime-item"><span>And More ...</span><span>+30</span></div></div>
-                <div class="anime-list"><h3 class="list-title"><i class="fas fa-clock"></i> Watching Soon...</h3><div class="anime-item"><span>Parasyte: The Maxim</span></div><div class="anime-item"><span>Golden Kamuy</span></div><div class="anime-item"><span>Ragna Crimson</span></div><div class="anime-item"><span>The Daily Life of the Immortal King</span></div><div class="anime-item"><span>Samurai Champloo</span></div><div class="anime-item"><span>Made in Abyss</span></div><div class="anime-item"><span>Mushishi</span></div><div class="anime-item"><span>Children of the Whales</span></div></div>
-            </div>
-        </section>
-
-        <!-- TOP 3 ANIME -->
-        <section class="scroll-section top-section">
-            <div class="section-title-wrapper"><h2 class="section-title-3d"><i class="fas fa-crown"></i> My Top 3 Anime</h2></div>
-            <div class="top-cards">
-                <div class="top-card"><div class="rank-badge">1</div><img src="https://aot-portal.com/wp/wp-content/uploads/2025/11/re_aotLA_kokuchi_1107-1-712x1006.jpg" alt="AOT"><div class="top-info"><h3>Attack on Titan</h3><p>A masterpiece about freedom, war, and titans. Epic storytelling.</p></div></div>
-                <div class="top-card"><div class="rank-badge rank-2">2</div><img src="https://www.arcsystemworks.fr/wp-content/uploads/2024/10/portrait_standard_hp.jpg.webp" alt="Hunter x Hunter"><div class="top-info"><h3>Hunter x Hunter</h3><p>Incredible character development and unique power system.</p></div></div>
-                <div class="top-card"><div class="rank-badge rank-3">3</div><img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=1200,height=675/catalog/crunchyroll/989d5abf2f9e664a84def918db260644.jpg" alt="Death Parade"><div class="top-info"><h3>Death Parade</h3><p>Unique psychological thriller about life, death, and judgment.</p></div></div>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section class="scroll-section contact-section">
-            <div class="section-title-wrapper"><h2 class="section-title-3d"><i class="fas fa-envelope"></i> Send Me a Message</h2></div>
-            <div class="contact-container">
-                <p style="text-align:center; margin-bottom:25px; font-weight:500;">Got something to say? I'd love to hear from you!</p>
-                <div>
-                    <input type="text" class="form-input" id="userName" placeholder="Your name (optional)">
-                    <textarea class="form-textarea" id="userMessage" placeholder="Write your message here..." rows="4" style="margin-top:15px"></textarea>
-                    <button type="button" class="form-submit" id="sendMessageBtn" style="margin-top:25px; width:100%">Open Email <i class="fas fa-envelope"></i></button>
-                </div>
-                <div style="margin-top:20px; background:#0a102f40; border-radius:20px; padding:12px; font-size:0.85rem"><p><i class="fas fa-info-circle"></i> Your message will be sent to: <strong>spynot1113@gmail.com</strong></p></div>
-            </div>
-        </section>
-        <footer><p>© 2026 𝓑𝓞𝓣𝓐𝓣𝓞 | 3D Cosmic Hub | Total Watched: 30+</p></footer>
-    </div>
-
-    <div class="music-toggle-3d" id="musicToggleBtn"><i class="fas fa-headphones"></i></div>
-    <div class="music-player-panel" id="musicPanel">
-        <div style="display:flex; justify-content:space-between; align-items:center;"><h3 style="font-weight:700;"><i class="fas fa-music"></i> Let It Happen</h3><button id="closeMusicPanel" style="background:none; border:none; color:white; font-size:24px; cursor:pointer">&times;</button></div>
-        <div class="track-row">
-            <img src="https://i.scdn.co/image/ab67616d00001e029e1cfc756886ac782e363d79" alt="Album Art" class="album-art-small" onerror="this.src='https://via.placeholder.com/50'">
-            <div><p style="font-weight:600;">Tame Impala</p><p style="font-size:0.8rem; opacity:0.8;">Let It Happen</p></div>
+<div class="music-fixed-wrapper">
+  <div class="music-toggle-btn" id="musicToggleBtn">
+    <i class="fas fa-chevron-right" id="toggleIcon"></i>
+  </div>
+  <div class="music-float hidden" id="floatingMusicPlayer">
+    <div class="music-player-inner">
+      <div class="player-avatar"><i class="fas fa-music"></i></div>
+      <div class="player-info">
+        <div class="track-name" id="trackName">𝐿𝑒𝑡 𝐼𝑡 𝐻𝑎𝑝𝑝𝑒𝑛 ♫</div>
+        <div class="track-artist"><i class="fas fa-moon"></i> BY · 𝗧𝗮𝗺𝗲 𝗜𝗺𝗽𝗮𝗹𝗮</div>
+      </div>
+      <div class="controls-group">
+        <div class="player-controls">
+          <button class="ctrl-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+          <button class="ctrl-btn" id="stopResetBtn"><i class="fas fa-stop"></i></button>
         </div>
-        <div class="progress-bar" id="progressBarOuter"><div class="progress-fill" id="progressFill"></div></div>
-        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.75rem"><span id="currentTimeText">0:00</span><span id="durationText">0:00</span></div>
-        <div style="display:flex; justify-content:center; gap:25px; margin:18px 0"><button id="playPauseMusic" style="background:#2a6eff; border:none; width:52px; height:52px; border-radius:50%; color:white; font-size:22px; cursor:pointer; transition:0.2s;"><i class="fas fa-play" id="playPauseIcon"></i></button></div>
-        <div style="display:flex; align-items:center; gap:12px;"><i class="fas fa-volume-down"></i><input type="range" id="volumeRange" min="0" max="100" value="50" style="flex:1"><i class="fas fa-volume-up"></i></div>
+        <div class="progress-area">
+          <span class="time-current" id="currentTime">0:00</span>
+          <div class="progress-bar-bg" id="progressBarBg"><div class="progress-fill" id="progressFill"></div></div>
+          <span class="time-duration" id="durationTime">0:00</span>
+        </div>
+        <div class="volume-inline"><i class="fas fa-volume-up"></i><input type="range" id="volumeSliderCompact" class="volume-slider-compact" min="0" max="1" step="0.01" value="0.7"></div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <audio id="bgAudio" loop preload="auto">
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
+<div id="welcomeToast" class="welcome-toast">
+  <i class="fas fa-hand-sparkles"></i>
+  <span>✨ Welcome to Botato's profile !✨</span>
+</div>
 
-    <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.128.0/build/three.module.js" } }
-    </script>
-    <script type="module">
-        import * as THREE from 'three';
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene(); scene.background = null;
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.5, 14);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-        
-        const starCount = window.innerWidth < 768 ? 1500 : 2800;
-        const starGeo = new THREE.BufferGeometry();
-        const positions = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount; i++) {
-            positions[i*3] = (Math.random() - 0.5) * 450;
-            positions[i*3+1] = (Math.random() - 0.5) * 250;
-            positions[i*3+2] = (Math.random() - 0.5) * 120 - 60;
-        }
-        starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const starMat = new THREE.PointsMaterial({ color: 0xaaddff, size: 0.2, transparent: true, opacity: 0.7 });
-        const stars = new THREE.Points(starGeo, starMat);
-        scene.add(stars);
-        
-        const ambientLight = new THREE.AmbientLight(0x222244); scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6); dirLight.position.set(2,5,3); scene.add(dirLight);
-        const backLight = new THREE.PointLight(0x3366aa, 0.4); backLight.position.set(-2,1,-5); scene.add(backLight);
-        
-        function animateStars() { stars.rotation.y += 0.00025; stars.rotation.x += 0.00015; requestAnimationFrame(animateStars); renderer.render(scene, camera); }
-        animateStars();
-        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
-    </script>
+<script>
+  const socialAccounts = [
+    { name: "Instagram", url: "https://www.instagram.com/_botato_/", icon: "fab fa-instagram", note: "always Active " },
+    { name: "Discord", url: "https://www.discord.com/users/761599757310623765", icon: "fab fa-discord", note: "best chilling app" },
+    { name: "Threads", url: "https://www.threads.com/@_botato_", icon: "fas fa-at", note: "useless" },
+    { name: "TikTok", url: "https://www.tiktok.com/@pzlru", icon: "fab fa-tiktok", note: "brainrot" },
+    { name: "Facebook", url: "https://web.facebook.com/botatosoooo/", icon: "fab fa-facebook", note: "i don't use it" },
+    { name: "Pinterest", url: "https://www.pinterest.com/botato3", icon: "fab fa-pinterest", note: "love" },
+    { name: "X", url: "https://x.com/_botatos_", icon: "fab fa-twitter", note: "thoughts and random stuff" },
+    { name: "Github", url: "https://github.com/botato3", icon: "fab fa-github", note: "creative code", goldenExtra: "hobby projects ✨" },
+    { name: "Reddit", url: "https://www.reddit.com/user/Connect-Swing-5067/", icon: "fab fa-reddit-alien", note: "cozy memes" },
+    { name: "Chess", url: "https://www.chess.com/member/yassine1983", icon: "fas fa-chess-queen", note: "mindful game", goldenNote: "challenge me ♟️" }
+  ];
+  function buildSocialNote(acc) {
+    let noteHtml = `<span class="social-note"><i class="fas fa-leaf" style="font-size:7px;"></i> ${acc.note}</span>`;
+    if (acc.name === "Github") noteHtml += `<span class="social-note golden-badge"><i class="fas fa-star"></i> ${acc.goldenExtra}</span>`;
+    if (acc.name === "Chess") noteHtml += `<span class="social-note golden-badge"><i class="fas fa-crown"></i> ${acc.goldenNote}</span>`;
+    return noteHtml;
+  }
+  const socialGrid = document.getElementById('socialGrid');
+  socialAccounts.forEach(acc => {
+    const link = document.createElement('a');
+    link.href = acc.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className = "social-link";
+    link.innerHTML = `<div class="social-icon"><i class="${acc.icon}"></i></div><div class="social-details"><h3>${acc.name}</h3>${buildSocialNote(acc)}</div>`;
+    socialGrid.appendChild(link);
+  });
 
-    <script>
-        // Music Logic
-        const audio = document.getElementById('bgAudio');
-        const START_TIME = 325;
-        audio.currentTime = START_TIME;
-        
-        audio.addEventListener('ended', () => { audio.currentTime = START_TIME; audio.play().catch(e => {}); });
-        audio.addEventListener('timeupdate', () => { if (audio.currentTime >= audio.duration - 0.3) { audio.currentTime = START_TIME; } });
-        
-        const toggleBtn = document.getElementById('musicToggleBtn');
-        const panel = document.getElementById('musicPanel');
-        const closePanel = document.getElementById('closeMusicPanel');
-        const playPauseBtn = document.getElementById('playPauseMusic');
-        const playIcon = document.getElementById('playPauseIcon');
-        const progressFill = document.getElementById('progressFill');
-        const progressBar = document.getElementById('progressBarOuter');
-        const currentSpan = document.getElementById('currentTimeText');
-        const durationSpan = document.getElementById('durationText');
-        const volumeSlider = document.getElementById('volumeRange');
-        
-        let isPlaying = false;
-        audio.volume = 0.5;
-        volumeSlider.value = 50;
-        
-        function formatTime(sec) { let m = Math.floor(sec/60); let s = Math.floor(sec%60); return `${m}:${s<10?'0'+s:s}`; }
-        audio.addEventListener('loadedmetadata', () => { durationSpan.innerText = formatTime(audio.duration); });
-        audio.addEventListener('timeupdate', () => {
-            let current = audio.currentTime;
-            let percent = ((current - START_TIME) / (audio.duration - START_TIME)) * 100;
-            if (percent >= 0 && percent <= 100) progressFill.style.width = percent+'%';
-            currentSpan.innerText = formatTime(current);
-        });
-        progressBar.addEventListener('click', (e) => { let rect = progressBar.getBoundingClientRect(); let perc = (e.clientX - rect.left)/rect.width; let newTime = START_TIME + perc * (audio.duration - START_TIME); audio.currentTime = Math.min(newTime, audio.duration - 0.1); if(!isPlaying) { audio.play().catch(()=>{}); playIcon.className = 'fas fa-pause'; isPlaying=true; } });
-        playPauseBtn.addEventListener('click', () => { if(isPlaying) { audio.pause(); playIcon.className = 'fas fa-play'; } else { audio.play().catch(()=>{}); playIcon.className = 'fas fa-pause'; } isPlaying = !isPlaying; });
-        volumeSlider.addEventListener('input', () => { audio.volume = volumeSlider.value/100; });
-        toggleBtn.addEventListener('click', () => { panel.classList.toggle('active'); if(audio.paused && !isPlaying && audio.currentTime === START_TIME) { audio.play().catch(()=>{}); playIcon.className = 'fas fa-pause'; isPlaying=true; } });
-        closePanel.addEventListener('click', () => { panel.classList.remove('active'); });
-        
-        // Notification
-        const notif = document.getElementById('welcomeNotification');
-        notif.classList.add('show');
-        setTimeout(() => { notif.classList.remove('show'); }, 5500);
-        
-        let musicStarted = false;
-        function startMusicOnFirstClick() {
-            if (!musicStarted) {
-                audio.play().then(() => { playIcon.className = 'fas fa-pause'; isPlaying = true; musicStarted = true; }).catch(e => {});
-            }
-        }
-        document.body.addEventListener('click', startMusicOnFirstClick, { once: true });
-        
-        // Contact form
-        document.getElementById('sendMessageBtn').addEventListener('click', () => {
-            const name = document.getElementById('userName').value.trim();
-            const msg = document.getElementById('userMessage').value.trim();
-            if(!msg) { alert("Please write a message."); return; }
-            const subject = name ? `Message from ${name}` : "Message via Botato";
-            const body = `Hello Botato,\n\n${msg}\n\n${name ? `- ${name}` : ''}`;
-            window.open(`mailto:spynot1113@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-            const btn = document.getElementById('sendMessageBtn');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> Email Opened';
-            setTimeout(() => btn.innerHTML = orig, 2500);
-        });
-        
-        // Scroll Observer
-        const sections = document.querySelectorAll('.scroll-section');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                    entry.target.classList.remove('out-view');
-                } else {
-                    entry.target.classList.add('out-view');
-                    entry.target.classList.remove('in-view');
-                }
-            });
-        }, { threshold: 0.2, rootMargin: "0px 0px -60px 0px" });
-        
-        sections.forEach(s => { observer.observe(s); s.classList.add('out-view'); });
-        
-        setTimeout(() => {
-            sections.forEach(s => { const rect = s.getBoundingClientRect(); if (rect.top < window.innerHeight - 100) { s.classList.add('in-view'); s.classList.remove('out-view'); } });
-        }, 100);
-    </script>
+  const animeFavorites = [
+    { name: "Attack on Titan", rank: 1, genre: "Dark Fantasy · Epic", vibe: "monumental", rating: "9.2", comment: "freedom & sacrifice", image: "https://i.pinimg.com/736x/84/2a/52/842a52cf5a02f8dcd455190a41afb3a1.jpg" },
+    { name: "Demon Slayer", rank: 2, genre: "Action · Supernatural", vibe: "emotional", rating: "8.9", comment: "boundless heart", image: "https://i.pinimg.com/1200x/05/a8/57/05a85759e1320870c98b98bda1f46a2d.jpg" },
+    { name: "Vinland Saga", rank: 3, genre: "Historical · Seinen", vibe: "philosophical", rating: "9.0", comment: "a true warrior", image: "https://i.pinimg.com/1200x/13/7a/ae/137aae582bd8f0435424990b4894efa3.jpg" },
+    { name: "Hunter x Hunter", rank: 4, genre: "Adventure · Shonen", vibe: "masterpiece", rating: "9.1", comment: "endless journey", image: "https://i.pinimg.com/736x/f8/a8/2d/f8a82dd2c77c75391252f7f5c6b128f2.jpg" },
+    { name: "Death Note", rank: 5, genre: "Psychological · Thriller", vibe: "intense", rating: "9.0", comment: "moral maze", image: "https://i.pinimg.com/1200x/e9/1e/60/e91e60c64556eda64322ae485e1bccd5.jpg" }
+  ];
+  const favoritesContainer = document.getElementById('favoritesList');
+  animeFavorites.forEach(anime => {
+    const card = document.createElement('div');
+    card.className = 'fav-card';
+    let starDisplay = parseFloat(anime.rating) >= 9.1 ? '★★★★★' : (parseFloat(anime.rating) >= 8.8 ? '★★★★½' : '★★★★');
+    card.innerHTML = `<div class="fav-rank">#${anime.rank}</div><img class="anime-thumb" src="${anime.image}" alt="${anime.name}" loading="lazy"><div class="fav-info"><h3>${anime.name}</h3><div class="fav-stats"><span><i class="fas fa-tag"></i> ${anime.genre}</span><span><i class="fas fa-waveform"></i> ${anime.vibe}</span></div><div class="rating-pill"><i class="fas fa-star"></i> ${anime.rating} · ${starDisplay}</div></div><div class="quote-vibe"><i class="fas fa-quote-left"></i> ${anime.comment}</div>`;
+    favoritesContainer.appendChild(card);
+  });
+
+  const animatedElements = document.querySelectorAll('.social-link, .fav-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); } });
+  }, { threshold: 0.15, rootMargin: "0px 0px -20px 0px" });
+  animatedElements.forEach(el => observer.observe(el));
+  window.addEventListener('load', () => {
+    animatedElements.forEach(el => { const rect = el.getBoundingClientRect(); if (rect.top < window.innerHeight - 100) { el.classList.add('revealed'); observer.unobserve(el); } });
+  });
+
+  const audio = new Audio('music.mp3');
+  audio.loop = false;       
+  audio.volume = 0.7;
+  let isPlaying = false;
+  const LOOP_START_SEC = 5 * 60 + 5; 
+  
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const stopResetBtn = document.getElementById('stopResetBtn');
+  const volumeSlider = document.getElementById('volumeSliderCompact');
+  const progressFill = document.getElementById('progressFill');
+  const progressBarBg = document.getElementById('progressBarBg');
+  const currentTimeSpan = document.getElementById('currentTime');
+  const durationTimeSpan = document.getElementById('durationTime');
+  
+  function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+  
+  function handleLoopCheck() {
+    if (!audio.duration) return;
+    if (audio.currentTime >= audio.duration - 0.05) {
+      audio.currentTime = LOOP_START_SEC;
+      if (isPlaying) audio.play().catch(e=>console.log("playback resume"));
+      updateProgressDisplay();
+    }
+  }
+  
+  function updateProgressDisplay() {
+    if (audio.duration) {
+      let percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = `${percent}%`;
+      currentTimeSpan.innerText = formatTime(audio.currentTime);
+    }
+  }
+  
+  audio.addEventListener('loadedmetadata', () => {
+    durationTimeSpan.innerText = formatTime(audio.duration);
+  });
+  
+  audio.addEventListener('timeupdate', () => {
+    updateProgressDisplay();
+    handleLoopCheck();
+  });
+  
+  audio.addEventListener('ended', () => {
+    audio.currentTime = LOOP_START_SEC;
+    if (isPlaying) audio.play().catch(e=>console.log("auto-loop"));
+    updateProgressDisplay();
+  });
+  
+  function startMusic() {
+    if (audio.paused && !isPlaying) {
+      audio.currentTime = LOOP_START_SEC;
+      audio.play().then(() => {
+        isPlaying = true;
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      }).catch(e => console.log("autoplay blocked, interaction needed"));
+    } else if (!audio.paused && isPlaying) {
+    } else if (audio.paused && isPlaying === false) {
+      audio.currentTime = LOOP_START_SEC;
+      audio.play().then(() => {
+        isPlaying = true;
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      }).catch(e => console.log("interaction needed"));
+    }
+  }
+  
+  function togglePlayPause() {
+    if (isPlaying) {
+      audio.pause();
+      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      isPlaying = false;
+    } else {
+      if (audio.paused && (audio.currentTime === 0 || audio.currentTime >= audio.duration - 0.5)) {
+        audio.currentTime = LOOP_START_SEC;
+      }
+      audio.play().catch(e => console.log("interaction needed"));
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      isPlaying = true;
+    }
+  }
+  
+  function stopAndReset() {
+    audio.pause();
+    audio.currentTime = LOOP_START_SEC;
+    isPlaying = false;
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    updateProgressDisplay();
+  }
+  
+  playPauseBtn.addEventListener('click', togglePlayPause);
+  stopResetBtn.addEventListener('click', stopAndReset);
+  if (volumeSlider) volumeSlider.addEventListener('input', (e) => { audio.volume = parseFloat(e.target.value); });
+  progressBarBg.addEventListener('click', (e) => {
+    const rect = progressBarBg.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    if (audio.duration) {
+      let newTime = percent * audio.duration;
+      audio.currentTime = newTime;
+      updateProgressDisplay();
+    }
+  });
+  
+  audio.preload = "auto";
+  audio.load();
+  audio.onerror = () => { console.warn("music.mp3 not found"); document.getElementById('trackName').innerText = "∞ lofi drift"; };
+  
+  const musicPlayer = document.getElementById('floatingMusicPlayer');
+  const toggleBtn = document.getElementById('musicToggleBtn');
+  const toggleIcon = document.getElementById('toggleIcon');
+  let playerVisible = false;
+  toggleBtn.addEventListener('click', () => {
+    playerVisible = !playerVisible;
+    if (playerVisible) {
+      musicPlayer.classList.remove('hidden');
+      toggleIcon.classList.remove('fa-chevron-right');
+      toggleIcon.classList.add('fa-chevron-left');
+    } else {
+      musicPlayer.classList.add('hidden');
+      toggleIcon.classList.remove('fa-chevron-left');
+      toggleIcon.classList.add('fa-chevron-right');
+    }
+  });
+  
+  const welcomeToast = document.getElementById('welcomeToast');
+  let welcomeShown = false;
+  let musicStartedByUser = false;
+  
+  function showWelcomeAndMusic() {
+    if (!welcomeShown) {
+      welcomeToast.classList.add('show');
+      welcomeShown = true;
+      setTimeout(() => {
+        welcomeToast.classList.remove('show');
+      }, 4000);
+    }
+    if (!musicStartedByUser) {
+      startMusic();
+      musicStartedByUser = true;
+    }
+  }
+  
+  document.body.addEventListener('click', (e) => {
+    if (!musicStartedByUser) {
+      showWelcomeAndMusic();
+    }
+  }, { once: false });
+  
+  window.addEventListener('load', () => {
+    audio.currentTime = LOOP_START_SEC;
+    updateProgressDisplay();
+  });
+  
+  audio.addEventListener('canplaythrough', () => {
+    if (!musicStartedByUser) audio.currentTime = LOOP_START_SEC;
+  });
+</script>
 </body>
 </html>
