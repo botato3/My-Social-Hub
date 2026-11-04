@@ -477,7 +477,6 @@ footer {
         <div class="player-controls">
           <button class="ctrl-btn" id="playPauseBtn" aria-label="Play or pause"><i class="fas fa-play"></i></button>
           <button class="ctrl-btn" id="stopResetBtn" aria-label="Stop"><i class="fas fa-stop"></i></button>
-          <button class="ctrl-btn active" id="rainBtn" aria-label="Rain sound" title="Rain sound"><i class="fas fa-cloud-rain"></i></button>
         </div>
         <div class="progress-area">
           <span class="time-current" id="currentTime">0:00</span>
@@ -650,40 +649,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 })();
 
-/* ================= RAIN SOUND (generated, no file needed) ================= */
-const RainSound = (function () {
-  let ctx, gain, started = false, on = true;
-  function build() {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const len = ctx.sampleRate * 3;
-    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
-    const src = ctx.createBufferSource();
-    src.buffer = buf; src.loop = true;
-    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 700;
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 7500;
-    gain = ctx.createGain(); gain.gain.value = 0;
-    src.connect(hp); hp.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
-    src.start();
-  }
-  return {
-    start() {
-      if (started) return;
-      started = true; build();
-      if (on) gain.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 2);
-    },
-    toggle() {
-      on = !on;
-      if (started) {
-        if (ctx.state === 'suspended') ctx.resume();
-        gain.gain.linearRampToValueAtTime(on ? 0.09 : 0, ctx.currentTime + 0.6);
-      } else if (on) { this.start(); }
-      return on;
-    }
-  };
-})();
-
 /* ================= MUSIC PLAYER ================= */
 (function player() {
   const audio = new Audio('music.mp3');   // ← replace this file with your RE4 save room track
@@ -696,7 +661,6 @@ const RainSound = (function () {
   const toggleIcon = document.getElementById('toggleIcon');
   const playBtn = document.getElementById('playPauseBtn');
   const stopBtn = document.getElementById('stopResetBtn');
-  const rainBtn = document.getElementById('rainBtn');
   const cur = document.getElementById('currentTime');
   const dur = document.getElementById('durationTime');
   const bar = document.getElementById('progressBarBg');
@@ -721,10 +685,8 @@ const RainSound = (function () {
 
   playBtn.addEventListener('click', () => {
     if (audio.paused) { userPaused = false; play(); } else { userPaused = true; audio.pause(); setPlayIcon(false); }
-    RainSound.start();
   });
   stopBtn.addEventListener('click', () => { userPaused = true; audio.pause(); audio.currentTime = 0; setPlayIcon(false); });
-  rainBtn.addEventListener('click', () => { rainBtn.classList.toggle('active', RainSound.toggle()); });
 
   audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
   audio.addEventListener('timeupdate', () => {
@@ -741,10 +703,18 @@ const RainSound = (function () {
   play();
   const firstInteraction = () => {
     if (!userPaused && audio.paused) play();
-    RainSound.start();
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.removeEventListener(ev, firstInteraction));
   };
   ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, firstInteraction, { once: false }));
+})();
+
+/* ================= INSTAGRAM PROFILE PICTURE ================= */
+/* Tries to load the current Instagram picture; if it fails, profile.jpg stays. */
+(function instagramAvatar() {
+  const img = document.querySelector('.avatar-img');
+  const probe = new Image();
+  probe.onload = () => { img.src = probe.src; };
+  probe.src = 'https://unavatar.io/instagram/_botato_?fallback=false';
 })();
 
 /* ================= "GAME SAVED" TOAST ================= */
