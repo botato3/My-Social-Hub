@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>𝙱𝙾𝚃𝙰𝚃𝙾</title>
+<title>BOTATO · Save Room</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
@@ -458,7 +458,7 @@ footer {
   <div class="fav-grid" id="favoritesList"></div>
 
   <footer class="reveal">
-    <i class="fas fa-floppy-disk"></i> Created by 𝙱𝙾𝚃𝙰𝚃𝙾
+    <i class="fas fa-floppy-disk"></i> Created by Botato · Progress saved
   </footer>
 </div>
 
@@ -491,7 +491,7 @@ footer {
 
 <div id="welcomeToast" class="welcome-toast">
   <i class="fas fa-floppy-disk"></i>
-  <span>! Welcome !</span>
+  <span>Welcome to Botato's save room</span>
 </div>
 
 <script>
@@ -699,13 +699,18 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   });
   vol.addEventListener('input', () => { audio.volume = parseFloat(vol.value); });
 
-  /* Try to start on load; browsers usually require a first tap/click */
-  play();
-  const firstInteraction = () => {
-    if (!userPaused && audio.paused) play();
-    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.removeEventListener(ev, firstInteraction));
-  };
-  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, firstInteraction, { once: false }));
+  /* Try to start on load. Phones block this until a real tap, so we keep
+     listening for taps/clicks and only stop once the music is really playing.
+     (iOS and Android only count 'click' / 'touchend' as valid, not 'touchstart'.) */
+  const EVENTS = ['click', 'touchend', 'pointerup', 'keydown'];
+  function stopListening() { EVENTS.forEach(ev => window.removeEventListener(ev, firstInteraction, true)); }
+  function firstInteraction() {
+    if (userPaused) { stopListening(); return; }
+    if (!audio.paused) { stopListening(); return; }
+    audio.play().then(() => { setPlayIcon(true); stopListening(); }).catch(() => {});
+  }
+  audio.play().then(() => { setPlayIcon(true); stopListening(); }).catch(() => { setPlayIcon(false); });
+  EVENTS.forEach(ev => window.addEventListener(ev, firstInteraction, true));
 })();
 
 /* ================= INSTAGRAM PROFILE PICTURE ================= */
